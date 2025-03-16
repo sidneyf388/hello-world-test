@@ -1,6 +1,6 @@
 /* styles.css */
 :root {
-    --dark-bg: #1a1a1a;
+    --dark-bg: #000000;
     --text-light: #e6e6e6;
     --accent-color: #2ecc71;
     --hover-effect: rgba(255, 255, 255, 0.1);
@@ -13,12 +13,52 @@ body {
     color: var(--text-light);
     font-family: 'Montserrat', sans-serif;
     min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.code-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.code-background::before {
+    content: '<html>\n  <body>\n    <script>\n      console.log("Hello World");\n    </script>\n  </body>\n</html>';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 14px;
+    color: var(--accent-color);
+    opacity: 0.1;
+    white-space: pre;
+    line-height: 1.5;
+    transform: rotate(-45deg);
+    animation: scrollBackground 60s linear infinite;
+}
+
+@keyframes scrollBackground {
+    0% {
+        transform: translateY(0) rotate(-45deg);
+    }
+    100% {
+        transform: translateY(-50%) rotate(-45deg);
+    }
 }
 
 .navbar {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.7);
     padding: 1rem 2rem;
     backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 10;
 }
 
 .nav-buttons {
@@ -50,6 +90,8 @@ body {
     text-align: center;
     padding: 4rem 2rem;
     animation: fadeIn 1s ease-out;
+    position: relative;
+    z-index: 10;
 }
 
 .welcome-text {
@@ -58,6 +100,7 @@ body {
     background: linear-gradient(45deg, var(--accent-color), #3498db);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .intro-text {
