@@ -1,6 +1,5 @@
 /* styles.css */
 :root {
-    --dark-bg: #000000;
     --text-light: #e6e6e6;
     --accent-color: #2ecc71;
     --hover-effect: rgba(255, 255, 255, 0.1);
@@ -9,27 +8,17 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: var(--dark-bg);
     color: var(--text-light);
     font-family: 'Montserrat', sans-serif;
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
+    background-color: #000000;
 }
 
-.code-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: hidden;
-    z-index: -1;
-}
-
-.code-background::before {
+body::before {
     content: '<html>\n  <body>\n    <script>\n      console.log("Hello World");\n    </script>\n  </body>\n</html>';
-    position: absolute;
+    position: fixed;
     top: -50%;
     left: -50%;
     width: 200%;
@@ -37,11 +26,11 @@ body {
     font-family: 'Source Code Pro', monospace;
     font-size: 14px;
     color: var(--accent-color);
-    opacity: 0.1;
     white-space: pre;
     line-height: 1.5;
     transform: rotate(-45deg);
     animation: scrollBackground 60s linear infinite;
+    z-index: -1;
 }
 
 @keyframes scrollBackground {
@@ -92,6 +81,10 @@ body {
     animation: fadeIn 1s ease-out;
     position: relative;
     z-index: 10;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    max-width: 800px;
+    margin: 2rem auto;
 }
 
 .welcome-text {
