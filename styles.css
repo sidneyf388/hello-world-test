@@ -1,20 +1,73 @@
+/* styles.css */
+:root {
+    --dark-bg: #1a1a1a;
+    --text-light: #e6e6e6;
+    --accent-color: #2ecc71;
+    --hover-effect: rgba(255, 255, 255, 0.1);
+}
+
 body {
     margin: 0;
     padding: 0;
+    background-color: var(--dark-bg);
+    color: var(--text-light);
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+}
+
+.navbar {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 1rem 2rem;
+    backdrop-filter: blur(10px);
+}
+
+.nav-buttons {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f0f0;
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.container {
+.btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-light);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1rem;
+    text-decoration: none;
+}
+
+.btn.grow:hover {
+    transform: scale(1.05);
+    background: var(--hover-effect);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.welcome-section {
     text-align: center;
+    padding: 4rem 2rem;
+    animation: fadeIn 1s ease-out;
 }
 
-h1 {
-    font-family: 'Pacifico', cursive;
-    font-size: 4rem;
-    color: #3498db;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+.welcome-text {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, var(--accent-color), #3498db);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.intro-text {
+    font-size: 1.2rem;
+    color: #b3b3b3;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
