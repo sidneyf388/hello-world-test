@@ -13,57 +13,103 @@ body {
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
+    background-color: #000000;
 }
 
-body::before {
-    content: '<html>\n  <body>\n    <script>\n      console.log("Hello World");\n    </script>\n  </body>\n</html>';
+/* Scrolling background text */
+.code-background {
     position: fixed;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    font-family: 'Source Code Pro', monospace;
-    font-size: 14px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.scrolling-text {
+    position: absolute;
+    animation: scrollText 20s linear infinite;
+    font-size: 12px;
+    opacity: 0.4;
     color: var(--accent-color);
-    white-space: pre;
-    line-height: 1.5;
-    transform: rotate(-45deg);
-    animation: scrollBackground 60s linear infinite;
-    z-index: -1;
+    font-family: 'Source Code Pro', monospace;
+    white-space: nowrap;
+    top: 100%;
+    letter-spacing: 1px;
 }
 
-@keyframes scrollBackground {
-    0% {
-        transform: translateY(0) rotate(-45deg);
-    }
-    100% {
-        transform: translateY(-50%) rotate(-45deg);
-    }
+@keyframes scrollText {
+    from { transform: translateY(0); }
+    to { transform: translateY(-1000%); }
 }
 
+/* Navbar styles */
 .navbar {
     background-color: rgba(0, 0, 0, 0.7);
     padding: 1rem 2rem;
     backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 10;
 }
 
 .nav-buttons {
     display: flex;
     gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .btn {
     padding: 0.8rem 1.5rem;
+    border: none;
     border-radius: 25px;
-    background-color: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05);
     color: var(--text-light);
     cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1rem;
+    text-decoration: none;
 }
 
 .btn.grow:hover {
     transform: scale(1.05);
+    background: var(--hover-effect);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
+/* Main content styles */
 .welcome-section {
     text-align: center;
+    padding: 4rem 2rem;
+    animation: fadeIn 1s ease-out;
+    position: relative;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+.welcome-text {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, var(--accent-color), #3498db);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.intro-text {
+    font-size: 1.2rem;
+    color: #b3b3b3;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
