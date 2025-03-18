@@ -6,6 +6,30 @@
     <title>Sidney's Website</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <!-- Inline CSS for typing effect -->
+    <style>
+        .typing-effect {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+            font-family: 'Montserrat', sans-serif;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 3px solid var(--accent-color);
+            width: 0;
+            animation: typing 4s steps(40, end), blink 0.5s infinite step-end alternate;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink {
+            from { border-color: transparent; }
+            to { border-color: var(--accent-color); }
+        }
+    </style>
 </head>
 <body>
     <div class="code-background">
@@ -16,11 +40,11 @@
         <div class="scrolling-text" style="left: 45%; animation-delay: 12s;">test test test test test test test test</div>
         <div class="scrolling-text" style="left: 55%; animation-delay: 1s;">test test test test test test test test</div>
         <div class="scrolling-text" style="left: 65%; animation-delay: 4s;">test test test test test test test test</div>
-        <div class="scrolling-text" style="left: 75%; animation-delay: 7s;">test test test test test test test test</div>
-        <div class="scrolling-text" style="left: 85%; animation-delay: 10s;">test test test test test test test test</div>
-        <div class="scrolling-text" style="left: 95%; animation-delay: 13s;">test test test test test test test test</div>
+        <div class="scrolling-text" style="left: 75%; animation-delay: 7s;">test test test test test test test text</div>
+        <div class="scrolling-text" style="left: 85%; animation-delay: 10s;">test text text text text text text text</div>
+        <div class="scrolling-text" style="left: 95%; animation-delay: 13s;">test text text text text text text text</div>
     </div>
-    
+
     <nav class="navbar">
         <div class="nav-buttons">
             <a href="index.html" class="btn grow">Home</a>
@@ -29,12 +53,14 @@
             <a href="#" class="btn grow">Contact</a>
         </div>
     </nav>
-    
+
     <main class="container">
+        <!-- Typing effect applied to the main heading -->
         <section class="welcome-section">
-            <h1 class="welcome-text">Welcome to Sidney's Website</h1>
+            <h1 class="typing-effect">Welcome to Sidney's Website</h1>
             <p class="intro-text">Exploring the digital universe one line of code at a time</p>
         </section>
     </main>
 </body>
 </html>
+
