@@ -1,66 +1,502 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sidney's Website</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Source+Code+Pro&display=swap" rel="stylesheet">
-    <!-- Inline CSS for typing effect -->
+    <title>Sidney Fry - Developer Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        .typing-effect {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            color: var(--text-light);
-            font-family: 'Montserrat', sans-serif;
-            white-space: nowrap;
-            overflow: hidden;
-            border-right: 3px solid var(--accent-color);
-            width: 0;
-            animation: typing 4s steps(40, end), blink 0.5s infinite step-end alternate;
+        /* Custom CSS for animations and game */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* slate-900 */
+            color: #e2e8f0; /* slate-200 */
         }
 
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
+        /* Animated Gradient Text */
+        .animated-gradient-text {
+            background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc, #f472b6, #38bdf8);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-flow 10s ease-in-out infinite;
         }
 
-        @keyframes blink {
-            from { border-color: transparent; }
-            to { border-color: var(--accent-color); }
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Page transition */
+        .page {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.5s ease-out;
+        }
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Project card hover */
+        .project-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Snake Game Canvas */
+        #snakeCanvas {
+            background-color: #1e293b; /* slate-800 */
+            border: 2px solid #334155; /* slate-700 */
+            border-radius: 8px;
+            width: 100%;
+            height: auto;
+            max-width: 600px;
+            aspect-ratio: 1 / 1;
+        }
+        
+        /* Custom modal for messages */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: #1e293b; /* slate-800 */
+            padding: 2rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
         }
     </style>
 </head>
-<body>
-    <div class="code-background">
-        <div class="scrolling-text" style="left: 5%; animation-delay: 0s;">test test test test test test test test</div>
-        <div class="scrolling-text" style="left: 15%; animation-delay: 3s;">test test test test test test test test</div>
-        <div class="scrolling-text" style="left: 25%; animation-delay: 6s;">test test test test test test test test</div>
-        <div class="scrolling-text" style="left: 35%; animation-delay: 9s;">test test test test test test test test</div>
-        <div class="scrolling-text" style="left: 45%; animation-delay: 12s;">test test test test test test test test</div>
-        <div class="scrolling-text" style="left: 55%; animation-delay: 1s;">test test test test test test test test</div>
-        <div class="scrolling-text" style="left: 65%; animation-delay: 4s;">test test test test test test test test</div>
-        <div class="scrolling-text" style="left: 75%; animation-delay: 7s;">test test test test test test test text</div>
-        <div class="scrolling-text" style="left: 85%; animation-delay: 10s;">test text text text text text text text</div>
-        <div class="scrolling-text" style="left: 95%; animation-delay: 13s;">test text text text text text text text</div>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Header / Navigation -->
+    <header class="bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50 border-b border-slate-700">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo / Name -->
+                <div class="flex-shrink-0">
+                    <span class="text-xl font-bold text-white">Sidney Fry</span>
+                </div>
+                <!-- Navigation Links -->
+                <div class="flex items-center space-x-4">
+                    <button class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-page="home">Home</button>
+                    <button class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-page="projects">Projects</button>
+                    <button class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-page="snake">Snake Game</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <!-- Home Page Content -->
+        <section id="home-page" class="page active">
+            <!-- Hero Section -->
+            <div class="text-center py-16 md:py-24">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter mb-4">
+                    <span class="animated-gradient-text">Hello, I'm Sidney Fry.</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-slate-400 max-w-2xl mx-auto">
+                    A creative developer building modern, responsive, and engaging web experiences.
+                </p>
+                <div class="mt-8 flex justify-center gap-4">
+                    <a href="#projects" class="nav-link bg-sky-500 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-sky-400 transition-all" data-page="projects">
+                        View My Work
+                    </a>
+                    <a href="https://github.com/your-username" target="_blank" rel="noopener noreferrer" class="bg-slate-700 text-slate-200 px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-slate-600 transition-all">
+                        GitHub
+                    </a>
+                </div>
+            </div>
+
+            <!-- About Me Section -->
+            <div class="my-16 md:my-24 max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold text-center mb-8">About Me</h2>
+                <p class="text-lg text-slate-400 text-center leading-relaxed">
+                    I'm a passionate programmer specializing in front-end and full-stack development. I love turning complex problems into simple, beautiful, and intuitive designs. When I'm not coding, you can find me exploring new technologies, contributing to open-source, or playing classic arcade games.
+                </p>
+            </div>
+
+            <!-- Projects Section -->
+            <div id="projects" class="my-16 md:my-24">
+                <h2 class="text-3xl font-bold text-center mb-12">My Projects</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Project Card 1 -->
+                    <div class="project-card bg-slate-800 rounded-lg overflow-hidden shadow-xl border border-slate-700">
+                        <img src="https://placehold.co/600x400/1e293b/94a3b8?text=Project+1" alt="Project 1" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-2">Project Title One</h3>
+                            <p class="text-slate-400 mb-4">A brief description of the project, its technologies, and its purpose.</p>
+                            <a href="#" class="text-sky-400 hover:text-sky-300 font-medium">View Project &rarr;</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Project Card 2 -->
+                    <div class="project-card bg-slate-800 rounded-lg overflow-hidden shadow-xl border border-slate-700">
+                        <img src="https://placehold.co/600x400/1e293b/94a3b8?text=Project+2" alt="Project 2" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-2">Project Title Two</h3>
+                            <p class="text-slate-400 mb-4">A brief description of the project, its technologies, and its purpose.</p>
+                            <a href="#" class="text-sky-400 hover:text-sky-300 font-medium">View Project &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- Project Card 3 -->
+                    <div class="project-card bg-slate-800 rounded-lg overflow-hidden shadow-xl border border-slate-700">
+                        <img src="https://placehold.co/600x400/1e293b/94a3b8?text=Project+3" alt="Project 3" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-2">Project Title Three</h3>
+                            <p class="text-slate-400 mb-4">A brief description of the project, its technologies, and its purpose.</p>
+                            <a href="#" class="text-sky-400 hover:text-sky-300 font-medium">View Project &rarr;</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Snake Game Page Content -->
+        <section id="snake-game-page" class="page">
+            <h2 class="text-3xl font-bold text-center mb-4">Classic Snake Game</h2>
+            <p class="text-center text-slate-400 mb-4">Use Arrow Keys (or swipe on mobile) to move. Don't hit the walls or yourself!</p>
+            <div class="flex flex-col items-center">
+                <div id="score-display" class="text-2xl font-bold mb-4">Score: 0</div>
+                <canvas id="snakeCanvas"></canvas>
+                <button id="start-game-btn" class="mt-6 bg-green-500 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-green-400 transition-all">
+                    Start Game
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-700 mt-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-slate-400">
+            <p>&copy; <span id="current-year"></span> Sidney Fry. All rights reserved.</p>
+            <!-- Add social links here -->
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="message-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modal-title" class="text-2xl font-bold mb-4">Game Over!</h3>
+            <p id="modal-score" class="text-lg mb-6">Your score: 0</p>
+            <button id="modal-restart-btn" class="bg-sky-500 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-sky-400 transition-all">
+                Play Again
+            </button>
+        </div>
     </div>
 
-    <nav class="navbar">
-        <div class="nav-buttons">
-            <a href="index.html" class="btn grow">Home</a>
-            <a href="http://147.185.221.26:55114/" class="btn grow">Sidney Flix</a>
-            <a href="projects.html" class="btn grow">Projects</a>
-            <a href="#" class="btn grow">Contact</a>
-        </div>
-    </nav>
 
-    <main class="container">
-        <!-- Typing effect applied to the main heading -->
-        <section class="welcome-section">
-            <h1 class="typing-effect">Welcome to Sidney's Website</h1>
-            <p class="intro-text">Exploring the digital universe one line of code at a time</p>
-        </section>
-    </main>
+    <script>
+        // --- Page Navigation ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pages = document.querySelectorAll('.page');
+
+        function showPage(pageId) {
+            pages.forEach(page => {
+                if (page.id === `${pageId}-page` || (pageId === 'projects' && page.id === 'home-page')) {
+                    page.classList.add('active');
+                } else {
+                    page.classList.remove('active');
+                }
+            });
+            
+            // Special handling for projects link to scroll
+            if (pageId === 'projects') {
+                document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+
+        // Set initial page (home)
+        showPage('home');
+        
+        // Update footer year
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // --- Snake Game ---
+        const canvas = document.getElementById('snakeCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreDisplay = document.getElementById('score-display');
+        const startButton = document.getElementById('start-game-btn');
+        
+        // Modal elements
+        const modal = document.getElementById('message-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalScore = document.getElementById('modal-score');
+        const restartButton = document.getElementById('modal-restart-btn');
+
+        let box = 20; // Size of each grid cell
+        let canvasSize = 600; // Will be set dynamically
+        let snake;
+        let food;
+        let score;
+        let direction;
+        let game; // Game loop interval
+        let changingDirection = false;
+        
+        // Touch controls
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+
+        function resizeCanvas() {
+            // Get the width of the container
+            const containerWidth = canvas.parentElement.clientWidth;
+            // Set canvas size to be a multiple of the box size
+            canvasSize = Math.floor(containerWidth / box) * box;
+            // Ensure max width
+            canvasSize = Math.min(canvasSize, 600);
+            
+            canvas.width = canvasSize;
+            canvas.height = canvasSize;
+            
+            // Recalculate box if needed, or just let the grid be larger
+            // For simplicity, we'll keep `box` constant and just have more/fewer boxes
+        }
+        
+        function init() {
+            resizeCanvas(); // Set initial size
+            
+            snake = [];
+            snake[0] = { x: Math.floor((canvas.width / box) / 2) * box, y: Math.floor((canvas.height / box) / 2) * box };
+
+            createFood();
+
+            score = 0;
+            scoreDisplay.textContent = `Score: ${score}`;
+            direction = null;
+            changingDirection = false;
+
+            if (game) {
+                clearInterval(game);
+            }
+            draw(); // Initial draw
+        }
+
+        function createFood() {
+            food = {
+                x: Math.floor(Math.random() * (canvas.width / box)) * box,
+                y: Math.floor(Math.random() * (canvas.height / box)) * box
+            };
+            // Ensure food doesn't spawn on the snake
+            for (let i = 0; i < snake.length; i++) {
+                if (food.x === snake[i].x && food.y === snake[i].y) {
+                    createFood();
+                    break;
+                }
+            }
+        }
+
+        function draw() {
+            if (!ctx) return;
+            // Clear canvas
+            ctx.fillStyle = "#1e293b"; // slate-800
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw snake
+            for (let i = 0; i < snake.length; i++) {
+                ctx.fillStyle = (i === 0) ? "#38bdf8" : "#818cf8"; // Head and body color
+                ctx.fillRect(snake[i].x, snake[i].y, box, box);
+                ctx.strokeStyle = "#1e293b";
+                ctx.strokeRect(snake[i].x, snake[i].y, box, box);
+            }
+
+            // Draw food
+            ctx.fillStyle = "#f472b6"; // Pink food
+            ctx.fillRect(food.x, food.y, box, box);
+        }
+        
+        function mainLoop() {
+            changingDirection = false; // Allow next direction change
+
+            let snakeX = snake[0].x;
+            let snakeY = snake[0].y;
+
+            if (direction === "LEFT") snakeX -= box;
+            if (direction === "UP") snakeY -= box;
+            if (direction === "RIGHT") snakeX += box;
+            if (direction === "DOWN") snakeY += box;
+
+            // Check for game over conditions
+            if (
+                snakeX < 0 ||
+                snakeY < 0 ||
+                snakeX >= canvas.width ||
+                snakeY >= canvas.height ||
+                collision(snakeX, snakeY, snake)
+            ) {
+                clearInterval(game);
+                showModal("Game Over!", score);
+                return;
+            }
+
+            // Check for food
+            if (snakeX === food.x && snakeY === food.y) {
+                score++;
+                scoreDisplay.textContent = `Score: ${score}`;
+                createFood();
+            } else {
+                // Remove tail
+                snake.pop();
+            }
+
+            // Add new head
+            let newHead = { x: snakeX, y: snakeY };
+            snake.unshift(newHead);
+
+            draw();
+        }
+
+        function collision(x, y, array) {
+            for (let i = 0; i < array.length; i++) {
+                if (x === array[i].x && y === array[i].y) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function setDirection(e) {
+            if (changingDirection) return; // Prevent rapid 180 turns
+            changingDirection = true;
+            
+            const key = e.keyCode;
+            if (key === 37 && direction !== "RIGHT") { // Left
+                direction = "LEFT";
+            } else if (key === 38 && direction !== "DOWN") { // Up
+                direction = "UP";
+            } else if (key === 39 && direction !== "LEFT") { // Right
+                direction = "RIGHT";
+            } else if (key === 40 && direction !== "UP") { // Down
+                direction = "DOWN";
+            }
+        }
+        
+        // --- Touch Controls ---
+        function handleTouchStart(e) {
+            e.preventDefault();
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+            if (!touchStartX || !touchStartY) return;
+
+            touchEndX = e.touches[0].clientX;
+            touchEndY = e.touches[0].clientY;
+
+            let dx = touchEndX - touchStartX;
+            let dy = touchEndY - touchStartY;
+
+            // Determine swipe direction
+            if (Math.abs(dx) > Math.abs(dy)) {
+                // Horizontal swipe
+                if (dx > 0 && direction !== "LEFT") {
+                    direction = "RIGHT";
+                } else if (dx < 0 && direction !== "RIGHT") {
+                    direction = "LEFT";
+                }
+            } else {
+                // Vertical swipe
+                if (dy > 0 && direction !== "UP") {
+                    direction = "DOWN";
+                } else if (dy < 0 && direction !== "DOWN") {
+                    direction = "UP";
+                }
+            }
+            
+            // Reset start points to avoid continuous small movements
+            touchStartX = 0;
+            touchStartY = 0;
+            changingDirection = true; // Mark as direction changed
+        }
+        
+        // --- Modal ---
+        function showModal(title, finalScore) {
+            modalTitle.textContent = title;
+            modalScore.textContent = `Your score: ${finalScore}`;
+            modal.classList.add('active');
+        }
+
+        function hideModal() {
+            modal.classList.remove('active');
+        }
+
+        // --- Event Listeners ---
+        document.addEventListener("keydown", setDirection);
+        
+        canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+        canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+
+        startButton.addEventListener('click', () => {
+            init();
+            if (game) clearInterval(game);
+            game = setInterval(mainLoop, 100); // Start game loop
+            startButton.textContent = "Restart Game"; // Change button text
+        });
+
+        restartButton.addEventListener('click', () => {
+            hideModal();
+            init();
+            if (game) clearInterval(game);
+            game = setInterval(mainLoop, 100); // Start game loop
+        });
+        
+        window.addEventListener('resize', init); // Re-init on resize
+
+        // Initialize the game state (but don't start it)
+        init();
+        
+    </script>
+
 </body>
 </html>
-
